@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/live_chat
+    depends_on:
+      - db
+    ports:
+      - "80:8000"
+    restart: on-failure
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: dev
+      POSTGRES_PASSWORD: docker
+      POSTGRES_USER: docker
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+volumes:
+  postgres_data:

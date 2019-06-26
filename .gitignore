@@ -1,0 +1,11 @@
+*.pyc
+*~
+__pycache__
+.pytest_cache/
+.idea
+
+.env
+.envs/*
+!.envs/.local/
+
+live_chat/media/
