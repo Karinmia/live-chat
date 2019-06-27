@@ -4,6 +4,6 @@ from django.contrib import admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('chat.urls')),
+    path('api/', include('chat.urls'), name='api-root'),
  ]
 
