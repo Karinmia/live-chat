@@ -4,9 +4,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-DEFAULT_USER_ID = 1
-
-
 def deserialize_user(user):
     """Deserialize user instance to JSON."""
     return {
@@ -17,7 +14,8 @@ def deserialize_user(user):
 
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    author = models.ForeignKey(User, on_delete=models.PROTECT, default=DEFAULT_USER_ID, editable=False)
+    author = models.ForeignKey(User, on_delete=models.PROTECT, editable=False, blank=True, null=True)
+    # author_email = models.EmailField(max_length=100)
     text = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True)

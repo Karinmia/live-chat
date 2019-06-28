@@ -77,9 +77,22 @@ class MessageCreate(APIView):
         Сreate a new message
         """
         message = self.request.data['message']
+        if 0 < len(message['text']) < 101:
+            user = self.request.user
+            if user.is_authenticated == False:
+                Message.objects.create(text=message['text'])
 
-        user = self.request.user
+                return Response({
+                    'status': 'SUCCESS', 'message': message, 'author': "none"
+                })
+            else:
+                Message.objects.create(text=message['text'], author=user)
 
-        return Response({
-            'status': 'SUCCESS', 'message': message, 'user': deserialize_user(user)
-        })
+                return Response({
+                    'status': 'SUCCESS', 'message': message, 'author': deserialize_user(user)
+                })
+        else:
+            return Response({
+                "error": "422 Unprocessable entity",
+                "detail": "Message can't be empty and max allowed message text lenght is 100 symbols'."
+            })
