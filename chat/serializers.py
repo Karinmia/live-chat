@@ -1,20 +1,14 @@
 from django.contrib.auth.models import User
 
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer
 
 from .models import Message, deserialize_user
 
 
-# class UserSerializer(serializers.HyperlinkedModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ('url', 'username', 'email', 'is_staff')
-
-
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'username', 'password')
+        fields = ('url', 'email', 'username', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -28,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 # Serializers define the API representation.
-class MessageSerializer(serializers.HyperlinkedModelSerializer):
+class MessageSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Message
         fields = ('id', 'text', 'author', 'created_at', 'updated_at')

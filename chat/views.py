@@ -17,17 +17,8 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-# class MessageList(generics.ListCreateAPIView):
-#     queryset = Message.objects.all()[:10]
-#     serializer_class = MessageSerializer
-
-
-# class MessageDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Message.objects.all()
-#     serializer_class = MessageSerializer
-
 def message_list(request):
-    return redirect('message-list-page', int=0)
+    return redirect('message-list-page', page=0)
 
 
 class MessageList(APIView):
@@ -38,7 +29,7 @@ class MessageList(APIView):
         List all messages, 10 per page, or create a new message.
         """
         if kwargs:
-            page = kwargs['int']
+            page = kwargs['page']
             if page == "":
                 page = 0
             else:
@@ -69,11 +60,8 @@ class MessageDetail(APIView):
         List all messages, 10 per page, or create a new message.
         """
         if kwargs:
-            message_id = kwargs['uuid']
-            print("\n\n\nMESSAGE ID:")
-            print(message_id)
-
-            message_id = int(message_id)
+            message_id = int(kwargs['pk'])
+            # message_id = int(message_id)
             message = Message.objects.get(id=message_id)
         else:
             message = Message.objects.all().first()
@@ -82,8 +70,12 @@ class MessageDetail(APIView):
             'messages': MessageSerializer(message, many=False, context={'request': request}).data
         })
 
+
+class MessageCreate(APIView):
     def post(self, request, *args, **kwargs):
-        """Сreate a new message"""
+        """
+        Сreate a new message
+        """
         message = self.request.data['message']
 
         user = self.request.user
